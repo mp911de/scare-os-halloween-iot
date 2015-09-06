@@ -13,7 +13,7 @@ I wanted to build something cool and scary for Halloween. Here in Germany Hellow
 * Sleep state if no one is around for a while
 * Whines when someone comes too close
 
-ScareOS is an Arduino-based thingy with eyes, sound and a range sensor. ScareOS tends to be sleepy. It there's no one around, it sleeps and snores. As soon as someone comes into range, it awakens. Then the things looks at its visitor, triggers a series of Halloween sounds and, moves its eyes. But beware! It starts to cry like a baby when you approach too close.
+ScareOS is an Arduino-based thingy with eyes, sound and a range sensor. ScareOS tends to be sleepy. It there's no one around, it sleeps and snores. As soon as someone comes into range, it awakens. Then the thingy looks at its visitor, triggers a series of Halloween sounds and, moves its eyes. But beware! It starts to cry like a baby when you approach too close.
 
 ![Glow in the dark](images/IMG_1327.jpg "Glow in the dark")
 
@@ -29,6 +29,8 @@ alt="" width="360" border="5" /></a>
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=dUIu-4qToRM
 " target="_blank"><img src="http://img.youtube.com/vi/dUIu-4qToRM/0.jpg" 
 alt="" width="360" height="180" border="5" /></a>
+
+*Hint: The video interferences are some recording issues.*
 
 Ingredients
 -----
@@ -78,7 +80,7 @@ Arduino Sketch
 
 You need some code to run ScareOS. The code controls the components and handles wake/sleep, triggering sounds and displaying the eyes on the LED matrix.
 
-The code is located in `scare-os/scare-os.ino`. You need two additional libaries:
+The code is located in `scare-os/scare-os.ino`. You need two additional libraries:
 
 * [Adafruit-LED-Backpack-Library](https://github.com/adafruit/Adafruit-LED-Backpack-Library)
 * [Adafruit-GFX-Library](https://github.com/adafruit/Adafruit-GFX-Library)
