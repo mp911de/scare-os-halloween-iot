@@ -3,7 +3,7 @@ ScareOS Halloween Pumpkin thingy
 
 Muhahahaha! Aaaaargh! Trick or Treat. Be so sweet. Give me something good to eat.
 
-I wanted to build something cool and scary for Halloween. Here in Germany Helloween is just about to become a trend. Meet the ScareOS, a something to spice up Halloween.
+I wanted to build something cool and scary for Halloween. Here in Germany Helloween is just about to become a trend. Meet the ScareOS, a thingy to spice up Halloween.
 
 **Features**
 
@@ -13,20 +13,22 @@ I wanted to build something cool and scary for Halloween. Here in Germany Hellow
 * Sleep state if no one is around for a while
 * Whines when someone comes too close
 
-ScareOS is an Arduino-based thingy with eyes, sound and a range sensor. ScareOS tends to be sleepy. It there's no one around, it sleeps and snores. As soon as someone comes into range, it awakens. Then the things stares at its visitor triggers a series of Halloween sounds and moves its eyes. But beware! It starts to cry like a baby when you come close.
+ScareOS is an Arduino-based thingy with eyes, sound and a range sensor. ScareOS tends to be sleepy. It there's no one around, it sleeps and snores. As soon as someone comes into range, it awakens. Then the things looks at its visitor, triggers a series of Halloween sounds and, moves its eyes. But beware! It starts to cry like a baby when you approach too close.
 
-![Connected components](images/IMG_0591.JPG "Connected components")
+![Glow in the dark](images/IMG_1327.jpg "Glow in the dark")
 
 The components are not yet built into a Pumpkin, but they are ready to go. I'll provide pictures on Oct 31, once I got the pumpkin set up.
 
+
+**Youtube Videos**
+
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=ZoHyhjCuUWQ
 " target="_blank"><img src="http://img.youtube.com/vi/ZoHyhjCuUWQ/0.jpg" 
-alt="" width="240" height="180" border="10" /></a>
-
+alt="" width="360" border="5" /></a>
 
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=dUIu-4qToRM
 " target="_blank"><img src="http://img.youtube.com/vi/dUIu-4qToRM/0.jpg" 
-alt="" width="240" height="180" border="10" /></a>
+alt="" width="360" height="180" border="5" /></a>
 
 Ingredients
 -----
@@ -47,13 +49,15 @@ Once you have all parts together, you can start wiring them.
 
 Wiring
 ------
-The common ground and common VCC of the breadboard comes handy to provide current for the involved components. The diagram shows you how to connect the particular components.
+The common ground and common `VCC` of the breadboard comes handy to provide current for the involved components. The diagram shows you how to connect the particular components.
 
 ![Fritzing wiring diagram](images/ScareOS.png "Fritzing wiring diagram")
 
 The two resistors protect the circuit from a signal that won't come back. I originally built the ranging sensor circuit on RaspberryPi and took kept the design. The Arduino `pulseIn()` function also accepts a timeout so basically the circuit would work without the resistors.
 
-The capacitor stabilizes the circuit. I discovered that the LED matrices cause some interference and instabilities within the `VCC`. The effect: The ranging sensor works only until some 80cm as soon as both LED matrices are turned on. If the matrices are switched off or do not display anything, the ranging sensor works fine. My solution was connecting a capacitor to `GND` and `VCC`.
+The capacitor stabilizes the circuit. I discovered that the LED matrices cause some interference and instabilities within the `VCC`. The effect: The ranging sensor works only until some 80cm once both LED matrices are turned on. If the matrices are switched off or do not display anything, the ranging sensor works fine. My solution: Connect a capacitor to `GND` and `VCC`.
+
+![Connected components](images/IMG_0591.JPG "Connected components")
 
 ![Closeup of the breadboard](images/IMG_0592.JPG "Closeup of the breadboard")
 
@@ -105,11 +109,24 @@ You can adopt the code to use different pins or adjust the distance/timing:
 
 ### Threading with Arduino
 
-Arduino code runs only single-threaded, meaning your Arduino can do only one thing at once. The sound trigger module, for instance, does not occupy the Arduino once a sound plays. So sounds play in the background within this terminology. Why am I telling you that? Displaying and animating graphics like it is done with the matrix eyes requires the Arduino to execute code, sleep a while, then execute code again and so on. One animation cycle is a sequence between 0.5sec and 10sec. In this time, the Arduino is occupied with the animation and if someone walks by the range sensor really fast, we will not notice it, because we're occupied with animating and not measuring distance. But that's not fully true. Most of the time, the Arduino "Sleep" which means we could use that time to do different things - things like triggering a sound or measuring distance. You'll find therefore lots of calls to a `bgProcessing()` method. This method is called with a delay parameter. If the delay is long enough to measure the distance (measuring the distance needs time and triggering sound, too), the distance is measured and the sound processing is invoked there. It's not exactly a task scheduler like a Windows or MacOS use to emulate multi-threading on one CPU (core), but it interleaves tasks in a similar way.
+Arduino code runs only single-threaded, meaning your Arduino can do only one thing at a time. The sound trigger module, for instance, does not occupy the Arduino once a sound plays. So sounds play in the background within this terminology. Why am I telling you that? 
+
+Displaying and animating graphics, like it is done with the matrix eyes, requires the Arduino to execute code, sleep a while, then execute code again and so on. One animation cycle lasts between 0.5sec and 10sec. In this time, the Arduino is occupied with the animation. If someone walks by the range sensor really fast, we would not notice it, because we're occupied with animating and not with measuring distance. 
+
+But that's not fully true. Most of the time, the Arduino "sleeps" which means we could use that time to do different things - things like triggering a sound or measuring distance. The code is written to utilize these delays. You'll find lots of calls to a `bgProcessing()` method. This method is called with a delay parameter. If the delay is long enough to measure the distance (measuring the distance needs time and triggering sound, too), the distance is measured and the sound processing is invoked there. It's not exactly a task scheduler like a Windows or MacOS use to emulate multi-threading on one CPU (core), but it interleaves tasks in a similar way.
 
 ### Some words about measuring distance
 
-The ranging sensor uses the physics of [speed of sound](https://en.wikipedia.org/wiki/Speed_of_sound) to determine the distance. An ultrasonic sound is triggered and the microphone records the echo. The speed of sound in dry air is about one kilometer in 2.914 sec. Since the sound needs to hit an object that bounces it back, the distance is crossed twice. Sometimes, the ranging sensor reports an echo after a very short or very long time. That are mostly outliers, but these can falsify the result and the assumption of distance. The code, therefore, performs a series of measures, sorts the results and takes some middle result. It works pretty good and the implementation is quite simple (easier than calculating a quantile).
+The ranging sensor uses the physics of [speed of sound](https://en.wikipedia.org/wiki/Speed_of_sound) to determine the distance. An ultrasonic sound is triggered and the microphone records the echo. The speed of sound in dry air is about one kilometer in 2.914 sec. Since the sound needs to hit an object that bounces it back, the way is crossed twice. This means, that the duration to measure the distance is `DISTANCE * Speed of Sound * 2`.
+
+Sometimes, the ranging sensor reports an echo after a shorer or longer time. The result of that are flickering distances of up to 100cm. These are outliers and falsify the result (the assumption of distance). The code, therefore, performs a series of measures, sorts the results and takes some middle result. It works pretty good and the implementation is quite simple (easier than calculating a quantile).
+
+And now, it's time to scare:
+
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=ZoHyhjCuUWQ
+" target="_blank"><img src="http://img.youtube.com/vi/ZoHyhjCuUWQ/0.jpg" 
+alt="" width="360" border="5" /></a>
+
 
 Attribution
 -----------
