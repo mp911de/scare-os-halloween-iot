@@ -60,6 +60,17 @@ long currentDistance = 0;
 void setup() {
   Serial.begin(9600);
   Serial.println("Time to power up");
+  
+  
+  Serial.println("       __J\"L__");
+  Serial.println("   ,-\"`--...--'\"-.");
+  Serial.println("  /  /\\       /\\  \\");
+  Serial.println(" J  /__\\  _  /__\\  L");
+  Serial.println(" |       / \\       |");
+  Serial.println(" J    _  \"\"\"  _    F");
+  Serial.println("  \\   \\|/\\_/\\|/   /");
+  Serial.println("   \"-._\\/\\_/\\/_,-\"happy halloween!");
+  
 
   pinMode(PIN_SONIC_TRIGGER, OUTPUT);
   pinMode(PIN_SONIC_ECHO, INPUT);
